@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db.models import fields
 from rest_framework import serializers
 from users.serializers import UserSerializer
@@ -26,3 +27,13 @@ class WriteRoomSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         return Room.objects.create(**validated_data)
+
+    # def validate(self, data):
+    #     check_in = data.get("check_in")
+    #     check_out = data.get("check_out")
+    #     if check_in == check_out:
+    #         raise serializers.ValidationError("Not enough time between changes")
+    #     else:
+    #         return data
+
+            
