@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .models import User
 from rooms.models import Room
-from .serializers import ReadUserSerializer, WriteUserSerializer
+from .serializers import UserSerializer
 from rooms.serializers import RoomSerializer
 
 # Create your views here.
@@ -16,10 +16,10 @@ class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-            return Response(ReadUserSerializer(request.user).data)
+            return Response(UserSerializer(request.user).data)
 
     def put(self, request):
-        serializer = WriteUserSerializer(request.user, data=request.data, partial=True)
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response()
@@ -31,7 +31,7 @@ class MeView(APIView):
 def user_detail(request, pk):
     try:
         user = User.objects.get(pk=pk)
-        return Response(ReadUserSerializer(user).data)
+        return Response(UserSerializer(user).data)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
