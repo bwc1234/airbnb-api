@@ -10,7 +10,17 @@ from rooms.models import Room
 from .serializers import UserSerializer
 from rooms.serializers import RoomSerializer
 
-# Create your views here.
+
+class UsersView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            new_user = serializer.save()
+            return Response(UserSerializer(new_user).data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class MeView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -25,15 +35,6 @@ class MeView(APIView):
             return Response()
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(["GET"])
-def user_detail(request, pk):
-    try:
-        user = User.objects.get(pk=pk)
-        return Response(UserSerializer(user).data)
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class FavsView(APIView):
@@ -59,3 +60,12 @@ class FavsView(APIView):
             except Room.DoesNotExist:
                 pass
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def user_detail(request, pk):
+    try:
+        user = User.objects.get(pk=pk)
+        return Response(UserSerializer(user).data)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
