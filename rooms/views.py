@@ -98,8 +98,6 @@ def room_search(request):
         filter_kwargs["lat__lte"] = float(lat) + 0.005
         filter_kwargs["lng__gte"] = float(lng) - 0.005
         filter_kwargs["lng__lte"] = float(lng) + 0.005
-    if lng is not None:
-        pass
     paginator = OwnPagination()
     try:
         rooms = Room.objects.filter(**filter_kwargs)
